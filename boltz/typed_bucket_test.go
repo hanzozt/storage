@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/uuid"
-	"github.com/openziti/foundation/v2/errorz"
+	"github.com/hanzozt/foundation/v2/errorz"
 	"github.com/stretchr/testify/require"
 	"go.etcd.io/bbolt"
 	"os"

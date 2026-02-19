@@ -2,7 +2,7 @@ package boltz
 
 import (
 	"fmt"
-	"github.com/openziti/foundation/v2/errorz"
+	"github.com/hanzozt/foundation/v2/errorz"
 	"github.com/pkg/errors"
 	"go.etcd.io/bbolt"
 )

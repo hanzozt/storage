@@ -23,8 +23,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/openziti/foundation/v2/stringz"
-	"github.com/openziti/storage/ast"
+	"github.com/hanzozt/foundation/v2/stringz"
+	"github.com/hanzozt/storage/ast"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 	"go.etcd.io/bbolt"

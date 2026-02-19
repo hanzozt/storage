@@ -18,7 +18,7 @@ package ast
 
 import (
 	"github.com/michaelquigley/pfxlog"
-	"github.com/openziti/storage/zitiql"
+	"github.com/hanzozt/storage/zitiql"
 	"sync/atomic"
 )
 

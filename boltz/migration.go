@@ -3,7 +3,7 @@ package boltz
 import (
 	"fmt"
 	"github.com/michaelquigley/pfxlog"
-	"github.com/openziti/foundation/v2/errorz"
+	"github.com/hanzozt/foundation/v2/errorz"
 )
 
 type MigrationStep struct {

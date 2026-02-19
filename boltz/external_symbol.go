@@ -1,7 +1,7 @@
 package boltz
 
 import (
-	"github.com/openziti/storage/ast"
+	"github.com/hanzozt/storage/ast"
 	"go.etcd.io/bbolt"
 )
 

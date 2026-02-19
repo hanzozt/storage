@@ -23,7 +23,7 @@ import (
 	"strconv"
 	"strings"
 
-	zitiql "github.com/openziti/storage/zitiql"
+	zitiql "github.com/hanzozt/storage/zitiql"
 	"github.com/pkg/errors"
 )
 

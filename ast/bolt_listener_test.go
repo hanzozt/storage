@@ -23,7 +23,7 @@ import (
 	"testing"
 	"time"
 
-	zitiql "github.com/openziti/storage/zitiql"
+	zitiql "github.com/hanzozt/storage/zitiql"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 )

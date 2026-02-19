@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/openziti/foundation/v2/stringz"
+	"github.com/hanzozt/foundation/v2/stringz"
 )
 
 var places = []string{"Alphaville", "Betaville", "Camden", "Delhi", "Erie"}

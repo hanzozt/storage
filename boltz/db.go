@@ -30,7 +30,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/michaelquigley/pfxlog"
-	"github.com/openziti/foundation/v2/concurrenz"
+	"github.com/hanzozt/foundation/v2/concurrenz"
 	"go.etcd.io/bbolt"
 )
 

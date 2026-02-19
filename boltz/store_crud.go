@@ -21,9 +21,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/michaelquigley/pfxlog"
-	"github.com/openziti/foundation/v2/errorz"
-	"github.com/openziti/foundation/v2/stringz"
-	"github.com/openziti/storage/ast"
+	"github.com/hanzozt/foundation/v2/errorz"
+	"github.com/hanzozt/foundation/v2/stringz"
+	"github.com/hanzozt/storage/ast"
 	"github.com/pkg/errors"
 	"go.etcd.io/bbolt"
 )
