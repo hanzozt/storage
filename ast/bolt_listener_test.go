@@ -23,7 +23,7 @@ import (
 	"testing"
 	"time"
 
-	zitiql "github.com/hanzozt/storage/zitiql"
+	ztql "github.com/hanzozt/storage/ztql"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 )
@@ -708,7 +708,7 @@ func runSortPageTest(t *testing.T, tt sortPageTestDef) {
 	listener.PrintStackOps = false
 
 	req := require.New(t)
-	parseErrors := zitiql.Parse(tt.expr, listener)
+	parseErrors := ztql.Parse(tt.expr, listener)
 	if len(parseErrors) != 0 {
 		req.NoError(parseErrors[0])
 	}
@@ -741,7 +741,7 @@ func runFilterTest(t *testing.T, tt testDef) {
 	listener.PrintStackOps = false
 
 	req := require.New(t)
-	parseErrors := zitiql.Parse(tt.expr, listener)
+	parseErrors := ztql.Parse(tt.expr, listener)
 	if len(parseErrors) != 0 {
 		req.NoError(parseErrors[0])
 	}
@@ -766,7 +766,7 @@ func TestIncompleteInput(t *testing.T) {
 	listener.PrintStackOps = false
 
 	req := require.New(t)
-	parseErrors := zitiql.Parse("updatedAt > datetime(2023-10-02T21:08:58.577Z)sort by updatedAt desc skip 500 limit 500", listener)
+	parseErrors := ztql.Parse("updatedAt > datetime(2023-10-02T21:08:58.577Z)sort by updatedAt desc skip 500 limit 500", listener)
 	req.True(len(parseErrors) > 0)
 	fmt.Println(parseErrors[0])
 }
@@ -778,7 +778,7 @@ func TestBackslashInInput(t *testing.T) {
 	listener.PrintStackOps = false
 
 	req := require.New(t)
-	parseErrors := zitiql.Parse(`tags.service\id = "1234"`, listener)
+	parseErrors := ztql.Parse(`tags.service\id = "1234"`, listener)
 	req.True(len(parseErrors) > 0)
 	fmt.Println(parseErrors[0])
 }

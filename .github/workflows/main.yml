@@ -23,7 +23,7 @@ jobs:
           go-version-file: ./go.mod
 
       - name: Install Ziti CI
-        uses: hanzozt/ziti-ci@v1
+        uses: hanzozt/zt-ci@v1
 
       - name: Build and Test
         run: go test ./...
@@ -31,9 +31,9 @@ jobs:
       - name: Release
         env:
           gh_ci_key: ${{ secrets.GH_CI_KEY }}
-          ziti_ci_gpg_key: ${{ secrets.ZITI_CI_GPG_KEY }}
-          ziti_ci_gpg_key_id: ${{ secrets.ZITI_CI_GPG_KEY_ID }}
+          zt_ci_gpg_key: ${{ secrets.ZITI_CI_GPG_KEY }}
+          zt_ci_gpg_key_id: ${{ secrets.ZITI_CI_GPG_KEY_ID }}
         if: github.ref_name == 'main' || startsWith(github.ref_name, 'release-')
         run: |
-          $(go env GOPATH)/bin/ziti-ci configure-git
-          $(go env GOPATH)/bin/ziti-ci tag -v -f version
+          $(go env GOPATH)/bin/zt-ci configure-git
+          $(go env GOPATH)/bin/zt-ci tag -v -f version

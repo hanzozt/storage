@@ -14,7 +14,7 @@
 	limitations under the License.
 */
 
-package zitiql
+package ztql
 
 import (
 	"fmt"

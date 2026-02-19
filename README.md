@@ -1,7 +1,7 @@
 # Overview
 This library contains a entity framework for bbolt, including CRUD (Create, Read, Update, Delete) and query operations, a filtering DSL (Domain Specific Language) as well as an AST (Abstract Syntax Tree) for the DSL
 
-  * `zitiql` contains the ANTLR4 based grammar for the filtering DSL
+  * `ztql` contains the ANTLR4 based grammar for the filtering DSL
       * Use the `./generate.sh` script to generate the go code when the grammar changes
   * `ast` contains an AST which can be built from the grammar. 
       * It is structured to be able to run filters across some set of data as well as interface for getting typing information about the symbols in the underlying datastore
@@ -19,10 +19,10 @@ This library contains a entity framework for bbolt, including CRUD (Create, Read
 A compile issue happens on arm 32 which required the following patch:
 
 ```diff
-diff --git a/storage/zitiql/zitiql_parser.go b/storage/zitiql/zitiql_parser.go
+diff --git a/storage/ztql/ztql_parser.go b/storage/ztql/ztql_parser.go
 index af80e9d..8732ec4 100644
---- a/storage/zitiql/zitiql_parser.go
-+++ b/storage/zitiql/zitiql_parser.go
+--- a/storage/ztql/ztql_parser.go
++++ b/storage/ztql/ztql_parser.go
 @@ -1170,7 +1170,7 @@ func (p *ZitiQlParser) Start() (localctx IStartContext) {
         p.GetErrorHandler().Sync(p)
         _la = p.GetTokenStream().LA(1)

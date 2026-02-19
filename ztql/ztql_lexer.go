@@ -1,6 +1,6 @@
 // Code generated from ZitiQl.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
-package zitiql
+package ztql
 
 import (
 	"fmt"
@@ -34,7 +34,7 @@ var ZitiQlLexerLexerStaticData struct {
 	decisionToDFA          []*antlr.DFA
 }
 
-func zitiqllexerLexerInit() {
+func ztqllexerLexerInit() {
 	staticData := &ZitiQlLexerLexerStaticData
 	staticData.ChannelNames = []string{
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN",
@@ -353,7 +353,7 @@ func zitiqllexerLexerInit() {
 // of time.
 func ZitiQlLexerInit() {
 	staticData := &ZitiQlLexerLexerStaticData
-	staticData.once.Do(zitiqllexerLexerInit)
+	staticData.once.Do(ztqllexerLexerInit)
 }
 
 // NewZitiQlLexer produces a new lexer instance for the optional input antlr.CharStream.

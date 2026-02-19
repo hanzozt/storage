@@ -1,6 +1,6 @@
 // Code generated from ZitiQl.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
-package zitiql // ZitiQl
+package ztql // ZitiQl
 import (
 	"fmt"
 	"strconv"
@@ -29,7 +29,7 @@ var ZitiQlParserStaticData struct {
 	decisionToDFA          []*antlr.DFA
 }
 
-func zitiqlParserInit() {
+func ztqlParserInit() {
 	staticData := &ZitiQlParserStaticData
 	staticData.LiteralNames = []string{
 		"", "','", "", "'('", "')'", "'['", "']'",
@@ -412,7 +412,7 @@ func zitiqlParserInit() {
 // of time.
 func ZitiQlParserInit() {
 	staticData := &ZitiQlParserStaticData
-	staticData.once.Do(zitiqlParserInit)
+	staticData.once.Do(ztqlParserInit)
 }
 
 // NewZitiQlParser produces a new parser instance for the optional input antlr.TokenStream.

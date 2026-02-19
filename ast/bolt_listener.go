@@ -23,7 +23,7 @@ import (
 	"strconv"
 	"strings"
 
-	zitiql "github.com/hanzozt/storage/zitiql"
+	ztql "github.com/hanzozt/storage/ztql"
 	"github.com/pkg/errors"
 )
 
@@ -42,7 +42,7 @@ func NewListener() *ToBoltListener {
 	}
 }
 
-var _ zitiql.ZitiQlListener = (*ToBoltListener)(nil)
+var _ ztql.ZitiQlListener = (*ToBoltListener)(nil)
 
 type ToBoltListener struct {
 	LoggingListener
@@ -232,58 +232,58 @@ func (bl *ToBoltListener) VisitTerminal(node antlr.TerminalNode) {
 	}
 
 	switch node.GetSymbol().GetTokenType() {
-	case zitiql.ZitiQlLexerBOOL:
+	case ztql.ZitiQlLexerBOOL:
 		bl.appendBoolNode(node.GetText())
-	case zitiql.ZitiQlLexerDATETIME:
+	case ztql.ZitiQlLexerDATETIME:
 		bl.appendDateTimeNode(node.GetText())
-	case zitiql.ZitiQlLexerIDENTIFIER:
+	case ztql.ZitiQlLexerIDENTIFIER:
 		bl.pushStack(&UntypedSymbolNode{symbol: node.GetText()})
-	case zitiql.ZitiQlLexerNULL:
+	case ztql.ZitiQlLexerNULL:
 		bl.pushStack(NullConstNode{})
-	case zitiql.ZitiQlLexerNUMBER:
+	case ztql.ZitiQlLexerNUMBER:
 		bl.appendNumberNode(node.GetText())
-	case zitiql.ZitiQlLexerNONE:
+	case ztql.ZitiQlLexerNONE:
 		bl.pushStack(&Int64ConstNode{value: int64(-1)}) // LIMIT NONE gets turned into marker value -1
-	case zitiql.ZitiQlLexerSTRING:
-		result := zitiql.ParseZqlString(node.GetText())
+	case ztql.ZitiQlLexerSTRING:
+		result := ztql.ParseZqlString(node.GetText())
 		bl.pushStack(&StringConstNode{value: result})
-	case zitiql.ZitiQlLexerEQ, zitiql.ZitiQlLexerGT, zitiql.ZitiQlLexerLT:
+	case ztql.ZitiQlLexerEQ, ztql.ZitiQlLexerGT, ztql.ZitiQlLexerLT:
 		bl.pushStack(binaryOpValues[node.GetText()])
-	case zitiql.ZitiQlLexerIN:
+	case ztql.ZitiQlLexerIN:
 		if strings.Contains(strings.ToLower(node.GetText()), "not") {
 			bl.pushStack(BinaryOpNotIn)
 		} else {
 			bl.pushStack(BinaryOpIn)
 		}
-	case zitiql.ZitiQlLexerBETWEEN:
+	case ztql.ZitiQlLexerBETWEEN:
 		if strings.Contains(strings.ToLower(node.GetText()), "not") {
 			bl.pushStack(BinaryOpNotBetween)
 		} else {
 			bl.pushStack(BinaryOpBetween)
 		}
-	case zitiql.ZitiQlLexerCONTAINS:
+	case ztql.ZitiQlLexerCONTAINS:
 		if strings.Contains(strings.ToLower(node.GetText()), "not") {
 			bl.pushStack(BinaryOpNotContains)
 		} else {
 			bl.pushStack(BinaryOpContains)
 		}
-	case zitiql.ZitiQlLexerICONTAINS:
+	case ztql.ZitiQlLexerICONTAINS:
 		if strings.Contains(strings.ToLower(node.GetText()), "not") {
 			bl.pushStack(BinaryOpNotIContains)
 		} else {
 			bl.pushStack(BinaryOpIContains)
 		}
-	case zitiql.ZitiQlLexerALL_OF:
+	case ztql.ZitiQlLexerALL_OF:
 		bl.pushStack(SetFunctionAllOf)
-	case zitiql.ZitiQlLexerANY_OF:
+	case ztql.ZitiQlLexerANY_OF:
 		bl.pushStack(SetFunctionAnyOf)
-	case zitiql.ZitiQlLexerCOUNT:
+	case ztql.ZitiQlLexerCOUNT:
 		bl.pushStack(SetFunctionCount)
-	case zitiql.ZitiQlLexerISEMPTY:
+	case ztql.ZitiQlLexerISEMPTY:
 		bl.pushStack(SetFunctionIsEmpty)
-	case zitiql.ZitiQlLexerASC:
+	case ztql.ZitiQlLexerASC:
 		bl.pushStack(SortAscending)
-	case zitiql.ZitiQlLexerDESC:
+	case ztql.ZitiQlLexerDESC:
 		bl.pushStack(SortDescending)
 	}
 }
@@ -317,7 +317,7 @@ func (bl *ToBoltListener) appendNumberNode(text string) {
 }
 
 func (bl *ToBoltListener) appendDateTimeNode(text string) {
-	t, err := zitiql.ParseZqlDatetime(text)
+	t, err := ztql.ParseZqlDatetime(text)
 	if err != nil {
 		bl.SetError(err)
 		return
@@ -325,22 +325,22 @@ func (bl *ToBoltListener) appendDateTimeNode(text string) {
 	bl.pushStack(&DatetimeConstNode{t})
 }
 
-func (bl *ToBoltListener) EnterStringArray(c *zitiql.StringArrayContext) {
+func (bl *ToBoltListener) EnterStringArray(c *ztql.StringArrayContext) {
 	bl.printDebug(c)
 	bl.enterGroup()
 }
 
-func (bl *ToBoltListener) EnterNumberArray(c *zitiql.NumberArrayContext) {
+func (bl *ToBoltListener) EnterNumberArray(c *ztql.NumberArrayContext) {
 	bl.printDebug(c)
 	bl.enterGroup()
 }
 
-func (bl *ToBoltListener) EnterDatetimeArray(c *zitiql.DatetimeArrayContext) {
+func (bl *ToBoltListener) EnterDatetimeArray(c *ztql.DatetimeArrayContext) {
 	bl.printDebug(c)
 	bl.enterGroup()
 }
 
-func (bl *ToBoltListener) ExitStringArray(c *zitiql.StringArrayContext) {
+func (bl *ToBoltListener) ExitStringArray(c *ztql.StringArrayContext) {
 	bl.printDebug(c)
 	if bl.HasError() {
 		return
@@ -359,7 +359,7 @@ func (bl *ToBoltListener) ExitStringArray(c *zitiql.StringArrayContext) {
 	bl.pushStack(arrayNode)
 }
 
-func (bl *ToBoltListener) ExitNumberArray(c *zitiql.NumberArrayContext) {
+func (bl *ToBoltListener) ExitNumberArray(c *ztql.NumberArrayContext) {
 	bl.printDebug(c)
 	if bl.HasError() {
 		return
@@ -403,7 +403,7 @@ func (bl *ToBoltListener) ExitNumberArray(c *zitiql.NumberArrayContext) {
 	}
 }
 
-func (bl *ToBoltListener) ExitDatetimeArray(c *zitiql.DatetimeArrayContext) {
+func (bl *ToBoltListener) ExitDatetimeArray(c *ztql.DatetimeArrayContext) {
 	bl.printDebug(c)
 	if bl.HasError() {
 		return
@@ -422,7 +422,7 @@ func (bl *ToBoltListener) ExitDatetimeArray(c *zitiql.DatetimeArrayContext) {
 	bl.pushStack(arrayNode)
 }
 
-func (bl *ToBoltListener) ExitOrExpr(c *zitiql.OrExprContext) {
+func (bl *ToBoltListener) ExitOrExpr(c *ztql.OrExprContext) {
 	bl.printDebug(c)
 	right := bl.popNode()
 	left := bl.popNode()
@@ -432,7 +432,7 @@ func (bl *ToBoltListener) ExitOrExpr(c *zitiql.OrExprContext) {
 	}
 }
 
-func (bl *ToBoltListener) ExitAndExpr(c *zitiql.AndExprContext) {
+func (bl *ToBoltListener) ExitAndExpr(c *ztql.AndExprContext) {
 	bl.printDebug(c)
 
 	right := bl.popNode()
@@ -443,17 +443,17 @@ func (bl *ToBoltListener) ExitAndExpr(c *zitiql.AndExprContext) {
 	}
 }
 
-func (bl *ToBoltListener) ExitInStringArrayOp(c *zitiql.InStringArrayOpContext) {
+func (bl *ToBoltListener) ExitInStringArrayOp(c *ztql.InStringArrayOpContext) {
 	bl.printDebug(c)
 	bl.exitInArrayOp()
 }
 
-func (bl *ToBoltListener) ExitInNumberArrayOp(c *zitiql.InNumberArrayOpContext) {
+func (bl *ToBoltListener) ExitInNumberArrayOp(c *ztql.InNumberArrayOpContext) {
 	bl.printDebug(c)
 	bl.exitInArrayOp()
 }
 
-func (bl *ToBoltListener) ExitInDatetimeArrayOp(c *zitiql.InDatetimeArrayOpContext) {
+func (bl *ToBoltListener) ExitInDatetimeArrayOp(c *ztql.InDatetimeArrayOpContext) {
 	bl.printDebug(c)
 	bl.exitInArrayOp()
 }
@@ -477,12 +477,12 @@ func (bl *ToBoltListener) exitInArrayOp() {
 	}
 }
 
-func (bl *ToBoltListener) ExitBetweenNumberOp(c *zitiql.BetweenNumberOpContext) {
+func (bl *ToBoltListener) ExitBetweenNumberOp(c *ztql.BetweenNumberOpContext) {
 	bl.printDebug(c)
 	bl.exitBetweenOp()
 }
 
-func (bl *ToBoltListener) ExitBetweenDateOp(c *zitiql.BetweenDateOpContext) {
+func (bl *ToBoltListener) ExitBetweenDateOp(c *ztql.BetweenDateOpContext) {
 	bl.printDebug(c)
 	bl.exitBetweenOp()
 }
@@ -507,62 +507,62 @@ func (bl *ToBoltListener) exitBetweenOp() {
 	}
 }
 
-func (bl *ToBoltListener) ExitBinaryLessThanStringOp(c *zitiql.BinaryLessThanStringOpContext) {
+func (bl *ToBoltListener) ExitBinaryLessThanStringOp(c *ztql.BinaryLessThanStringOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
 
-func (bl *ToBoltListener) ExitBinaryGreaterThanStringOp(c *zitiql.BinaryGreaterThanStringOpContext) {
+func (bl *ToBoltListener) ExitBinaryGreaterThanStringOp(c *ztql.BinaryGreaterThanStringOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
 
-func (bl *ToBoltListener) ExitBinaryLessThanNumberOp(c *zitiql.BinaryLessThanNumberOpContext) {
+func (bl *ToBoltListener) ExitBinaryLessThanNumberOp(c *ztql.BinaryLessThanNumberOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
 
-func (bl *ToBoltListener) ExitBinaryLessThanDatetimeOp(c *zitiql.BinaryLessThanDatetimeOpContext) {
+func (bl *ToBoltListener) ExitBinaryLessThanDatetimeOp(c *ztql.BinaryLessThanDatetimeOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
 
-func (bl *ToBoltListener) ExitBinaryGreaterThanNumberOp(c *zitiql.BinaryGreaterThanNumberOpContext) {
+func (bl *ToBoltListener) ExitBinaryGreaterThanNumberOp(c *ztql.BinaryGreaterThanNumberOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
 
-func (bl *ToBoltListener) ExitBinaryGreaterThanDatetimeOp(c *zitiql.BinaryGreaterThanDatetimeOpContext) {
+func (bl *ToBoltListener) ExitBinaryGreaterThanDatetimeOp(c *ztql.BinaryGreaterThanDatetimeOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
 
-func (bl *ToBoltListener) ExitBinaryEqualToStringOp(c *zitiql.BinaryEqualToStringOpContext) {
+func (bl *ToBoltListener) ExitBinaryEqualToStringOp(c *ztql.BinaryEqualToStringOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
 
-func (bl *ToBoltListener) ExitBinaryEqualToNumberOp(c *zitiql.BinaryEqualToNumberOpContext) {
+func (bl *ToBoltListener) ExitBinaryEqualToNumberOp(c *ztql.BinaryEqualToNumberOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
 
-func (bl *ToBoltListener) ExitBinaryEqualToDatetimeOp(c *zitiql.BinaryEqualToDatetimeOpContext) {
+func (bl *ToBoltListener) ExitBinaryEqualToDatetimeOp(c *ztql.BinaryEqualToDatetimeOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
 
-func (bl *ToBoltListener) ExitBinaryEqualToBoolOp(c *zitiql.BinaryEqualToBoolOpContext) {
+func (bl *ToBoltListener) ExitBinaryEqualToBoolOp(c *ztql.BinaryEqualToBoolOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
 
-func (bl *ToBoltListener) ExitBinaryEqualToNullOp(c *zitiql.BinaryEqualToNullOpContext) {
+func (bl *ToBoltListener) ExitBinaryEqualToNullOp(c *ztql.BinaryEqualToNullOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
 
-func (bl *ToBoltListener) ExitBinaryContainsOp(c *zitiql.BinaryContainsOpContext) {
+func (bl *ToBoltListener) ExitBinaryContainsOp(c *ztql.BinaryContainsOpContext) {
 	bl.printDebug(c)
 	bl.ExitBinaryOp()
 }
@@ -581,12 +581,12 @@ func (bl *ToBoltListener) ExitBinaryOp() {
 	}
 }
 
-func (bl *ToBoltListener) ExitSetFunctionExpr(c *zitiql.SetFunctionExprContext) {
+func (bl *ToBoltListener) ExitSetFunctionExpr(c *ztql.SetFunctionExprContext) {
 	bl.printDebug(c)
 	bl.pushSetFunction()
 }
 
-func (bl *ToBoltListener) ExitIsEmptyFunction(c *zitiql.IsEmptyFunctionContext) {
+func (bl *ToBoltListener) ExitIsEmptyFunction(c *ztql.IsEmptyFunctionContext) {
 	bl.printDebug(c)
 	bl.pushSetFunction()
 }
@@ -603,12 +603,12 @@ func (bl *ToBoltListener) pushSetFunction() {
 	}
 }
 
-func (bl *ToBoltListener) EnterSortByExpr(c *zitiql.SortByExprContext) {
+func (bl *ToBoltListener) EnterSortByExpr(c *ztql.SortByExprContext) {
 	bl.printDebug(c)
 	bl.enterGroup()
 }
 
-func (bl *ToBoltListener) ExitSortByExpr(c *zitiql.SortByExprContext) {
+func (bl *ToBoltListener) ExitSortByExpr(c *ztql.SortByExprContext) {
 	bl.printDebug(c)
 	result := &SortByNode{
 		SortFields: make([]*SortFieldNode, len(bl.currentStack.values)),
@@ -626,7 +626,7 @@ func (bl *ToBoltListener) ExitSortByExpr(c *zitiql.SortByExprContext) {
 	bl.pushStack(result)
 }
 
-func (bl *ToBoltListener) ExitSortFieldExpr(c *zitiql.SortFieldExprContext) {
+func (bl *ToBoltListener) ExitSortFieldExpr(c *ztql.SortFieldExprContext) {
 	bl.printDebug(c)
 	direction, ok := bl.peekStack().(SortDirection)
 	if !ok {
@@ -644,7 +644,7 @@ func (bl *ToBoltListener) ExitSortFieldExpr(c *zitiql.SortFieldExprContext) {
 	}
 }
 
-func (bl *ToBoltListener) ExitSkipExpr(c *zitiql.SkipExprContext) {
+func (bl *ToBoltListener) ExitSkipExpr(c *ztql.SkipExprContext) {
 	bl.printDebug(c)
 	val := bl.popNode()
 	if bl.HasError() {
@@ -658,7 +658,7 @@ func (bl *ToBoltListener) ExitSkipExpr(c *zitiql.SkipExprContext) {
 	bl.pushStack(&SkipExprNode{Int64ConstNode: *skip})
 }
 
-func (bl *ToBoltListener) ExitLimitExpr(c *zitiql.LimitExprContext) {
+func (bl *ToBoltListener) ExitLimitExpr(c *ztql.LimitExprContext) {
 	bl.printDebug(c)
 	val := bl.popNode()
 	if bl.HasError() {
@@ -672,7 +672,7 @@ func (bl *ToBoltListener) ExitLimitExpr(c *zitiql.LimitExprContext) {
 	bl.pushStack(&LimitExprNode{Int64ConstNode: *limit})
 }
 
-func (bl *ToBoltListener) ExitQueryStmt(c *zitiql.QueryStmtContext) {
+func (bl *ToBoltListener) ExitQueryStmt(c *ztql.QueryStmtContext) {
 	bl.printDebug(c)
 
 	result := &untypedQueryNode{}
@@ -703,7 +703,7 @@ func (bl *ToBoltListener) ExitQueryStmt(c *zitiql.QueryStmtContext) {
 	}
 }
 
-func (bl *ToBoltListener) ExitSubQuery(c *zitiql.SubQueryContext) {
+func (bl *ToBoltListener) ExitSubQuery(c *ztql.SubQueryContext) {
 	bl.printDebug(c)
 	queryNode := bl.popNode()
 	node := bl.popNode()
@@ -725,7 +725,7 @@ func (bl *ToBoltListener) ExitSubQuery(c *zitiql.SubQueryContext) {
 	}
 }
 
-func (bl *ToBoltListener) ExitNotExpr(c *zitiql.NotExprContext) {
+func (bl *ToBoltListener) ExitNotExpr(c *ztql.NotExprContext) {
 	bl.printDebug(c)
 	expr := bl.popNode()
 	if !bl.HasError() {

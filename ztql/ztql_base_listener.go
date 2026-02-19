@@ -1,6 +1,6 @@
 // Code generated from ZitiQl.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
-package zitiql // ZitiQl
+package ztql // ZitiQl
 import "github.com/antlr4-go/antlr/v4"
 
 // BaseZitiQlListener is a complete listener for a parse tree produced by ZitiQlParser.

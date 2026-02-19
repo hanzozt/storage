@@ -18,7 +18,7 @@ package ast
 
 import (
 	"github.com/michaelquigley/pfxlog"
-	"github.com/hanzozt/storage/zitiql"
+	"github.com/hanzozt/storage/ztql"
 	"sync/atomic"
 )
 
@@ -37,7 +37,7 @@ func Parse(symbolTypes SymbolTypes, query string) (Query, error) {
 		}, nil
 	}
 
-	parseErrors := zitiql.Parse(query, listener)
+	parseErrors := ztql.Parse(query, listener)
 	if len(parseErrors) != 0 {
 		return nil, parseErrors[0]
 	}
