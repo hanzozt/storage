@@ -7,8 +7,8 @@ require (
 	github.com/biogo/store v0.0.0-20190426020002-884f370e325d
 	github.com/google/go-cmp v0.7.0
 	github.com/google/uuid v1.6.0
+	github.com/hanzozt/foundation/v2 v2.0.92
 	github.com/michaelquigley/pfxlog v0.6.10
-	github.com/hanzozt/foundation/v2 v2.0.87
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.11.1
 	go.etcd.io/bbolt v1.4.3
